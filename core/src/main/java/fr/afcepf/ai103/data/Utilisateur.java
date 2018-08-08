@@ -40,7 +40,7 @@ public class Utilisateur implements Serializable {
 
 	private String prenom;
 
-	private byte sexe;
+	private short sexe;
 
 	private String telephone;
 
@@ -64,6 +64,10 @@ public class Utilisateur implements Serializable {
 	@OneToMany(mappedBy="utilisateur")
 	private List<Reponse> reponses;
 
+	//bi-directional many-to-one association to Stock
+	@OneToMany(mappedBy="utilisateur")
+	private List<Stock> stocks;
+
 	//bi-directional many-to-many association to Adresse
 	@ManyToMany
 	@JoinTable(
@@ -76,10 +80,6 @@ public class Utilisateur implements Serializable {
 			}
 		)
 	private List<Adresse> adresses;
-
-	//bi-directional many-to-one association to Stock
-	@OneToMany(mappedBy="utilisateur")
-	private List<Stock> stocks;
 
 	public Utilisateur() {
 	}
@@ -164,11 +164,11 @@ public class Utilisateur implements Serializable {
 		this.prenom = prenom;
 	}
 
-	public byte getSexe() {
+	public short getSexe() {
 		return this.sexe;
 	}
 
-	public void setSexe(byte sexe) {
+	public void setSexe(short sexe) {
 		this.sexe = sexe;
 	}
 
@@ -290,14 +290,6 @@ public class Utilisateur implements Serializable {
 		return repons;
 	}
 
-	public List<Adresse> getAdresses() {
-		return this.adresses;
-	}
-
-	public void setAdresses(List<Adresse> adresses) {
-		this.adresses = adresses;
-	}
-
 	public List<Stock> getStocks() {
 		return this.stocks;
 	}
@@ -318,6 +310,14 @@ public class Utilisateur implements Serializable {
 		stock.setUtilisateur(null);
 
 		return stock;
+	}
+
+	public List<Adresse> getAdresses() {
+		return this.adresses;
+	}
+
+	public void setAdresses(List<Adresse> adresses) {
+		this.adresses = adresses;
 	}
 
 }

@@ -8,11 +8,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import fr.afcepf.ai103.data.Stock;
-import fr.afcepf.ai103.data.Utilisateur;
+
 
 @Stateless
 @Local
 public class DaoStock implements IDaoStock {
+	
+	
+	
 	
 	@PersistenceContext(unitName="core")
 	public EntityManager entityManager;
@@ -21,39 +24,35 @@ public class DaoStock implements IDaoStock {
 		
 	}
 
-	@Override
 	
-	//avec le createQuery
-	public List<Stock> listeDeMonStock(int id_user) {
-		//requet pour récuperer la liste de mon stock alimentaires 
-		String maListeProduits = "select ut, st, pr, sca, ca, unt,consr, conso, an, rep"        
-															+ "FROM utilisateur ut"
-															+ "INNER JOIN Stock st"
-															+ "INNER JOIN produit pr"
-															+ "INNER JOIN sous_categorie sca"
-															+ "INNER JOIN categorie ca"
-															+ "INNER JOIN unite unt"
-															+ "INNER JOIN conservation consr"
-															+ "INNER JOIN consommation conso"
-															+ "INNER JOIN annonce an"
-															+ "INNER JOIN reponse rep"
-				                  + "where ut.id_user = :id_user "
-				                  + "and co.id_conso = :id_conso"
-				                  + "and rep.date_transaction = date_transaction";
+    @Override
+	public List<Stock> listeStockTotalByIdUtilisateur(int id_user) {
 		
-		return entityManager.createQuery(maListeProduits, Stock.class)
+		return entityManager.createQuery("select st from Stock st where st.utilisateur.id_user = :id_user ", Stock.class)
 				.setParameter("id_user", id_user)
-				.setParameter("id_conso", null)
-				.setParameter("date_transaction", null)
 				.getResultList();
+		
 	}
 
-	/*public List<Stock> listeDeMonStock(int id_user) {
-		return entityManager.createNamedQuery("Stock.parIdUser", Stock.class )
-				.setParameter("id_user", id_user)
-				.getResultList();
-		
-	}*/
+
+    @Override
+	public Stock getStockByIdStock(Integer id)
+	{
+		return entityManager.createQuery("SELECT s FROM Stock s WHERE s.id_prod_stock= :id", Stock.class)
+		.setParameter("id", id)
+		.getSingleResult();
+	}
+    
+    
+    @Override
+	public Double getQuantiteById(Integer id_prod_stock, Integer id_user) {
+		Stock prod = entityManager.createQuery("SELECT s FROM Stock s WHERE s.id_prod_stock = :id_prod_stock",Stock.class)
+		.setParameter("id_prod_stock", id_prod_stock)
+		.getSingleResult();
+		return prod.getQte_initiale();
+	}
+	
+
 	public EntityManager getEntityManager() {
 		return entityManager;
 	}
@@ -61,7 +60,6 @@ public class DaoStock implements IDaoStock {
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
-	
-	
+
 
 }

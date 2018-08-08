@@ -3,9 +3,17 @@ package fr.afcepf.ai103.dao;
 import java.util.List;
 
 import fr.afcepf.ai103.data.Stock;
-import fr.afcepf.ai103.data.Utilisateur;
 
 public interface IDaoStock 
 {
-public List<Stock> listeDeMonStock(int id_user);
+
+public List<Stock> listeStockTotalByIdUtilisateur(int id_user);
+
+public Stock getStockByIdStock(Integer id);
+
+public Double getQuantiteById(Integer id_prod_stock, Integer id_user);
+
+
+
+
 }
